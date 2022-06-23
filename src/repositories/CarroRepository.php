@@ -12,13 +12,15 @@ class CarroRepository
 
   public function create(Carro $carro)
   {
-    $sql = 'INSERT INTO carro (cod_veiculo, tamanho_motor) VALUES (?,?)';
+    $sql = 'INSERT INTO carro (tamanho_motor) VALUES (?) RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
 
-    $stmt->bindValue(1, $carro->getCodVeiculo());
-    $stmt->bindValue(2, $carro->getTamanhoMotor());
+    $stmt->bindValue(1, $carro->getTamanhoMotor());
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function find()
@@ -38,7 +40,7 @@ class CarroRepository
 
   public function findOne($id)
   {
-    $sql = 'SELECT * FROM carro WHERE cod_veiculo = ?';
+    $sql = 'SELECT * FROM carro WHERE veiculo_fk_cod_veiculo = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
 
@@ -48,7 +50,7 @@ class CarroRepository
     $response = $stmt->fetch();
 
     return array(
-      "cod_veiculo" => $response['cod_veiculo'],
+      "cod_veiculo" => $response['veiculo_fk_cod_veiculo'],
       "tamanho_motor" => $response['tamanho_motor']
     );
   }
@@ -56,19 +58,22 @@ class CarroRepository
   public function update(Carro $carro)
   {
 
-    $sql = 'UPDATE carro SET tamanho_motor = ? WHERE cod_veiculo = ?';
+    $sql = 'UPDATE carro SET tamanho_motor = ? WHERE veiculo_fk_cod_veiculo = ? RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $carro->getTamanhoMotor());
     $stmt->bindValue(2, $carro->getCodVeiculo());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($id)
   {
 
-    $sql = 'DELETE FROM carro WHERE cod_veiculo = ?';
+    $sql = 'DELETE FROM carro WHERE veiculo_fk_cod_veiculo = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $id);

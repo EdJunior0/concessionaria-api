@@ -12,7 +12,7 @@ class ClienteRepository
 
   public function create(Cliente $cliente)
   {
-    $sql = 'INSERT INTO cliente (cpf, nome, endereco) VALUES (?,?,?)';
+    $sql = 'INSERT INTO cliente (cpf, nome, endereco) VALUES (?,?,?) RETURNING cpf';
 
     $stmt = Connection::getConn()->prepare($sql);
 
@@ -21,6 +21,9 @@ class ClienteRepository
     $stmt->bindValue(3, $cliente->getEndereco());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function find()
@@ -76,7 +79,7 @@ class ClienteRepository
   public function update(Cliente $cliente)
   {
 
-    $sql = 'UPDATE cliente SET nome = ?, endereco = ? WHERE cpf = ?';
+    $sql = 'UPDATE cliente SET nome = ?, endereco = ? WHERE cpf = ? RETURNING cpf';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $cliente->getNome());
@@ -84,6 +87,9 @@ class ClienteRepository
     $stmt->bindValue(3, $cliente->getCpf());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($cpf)
