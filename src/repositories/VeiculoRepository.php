@@ -12,14 +12,13 @@ class VeiculoRepository
 {
   public function create(Veiculo $veiculo)
   {
-    $sql = 'INSERT INTO veiculo (cod_veiculo, preco, modelo, car_type) VALUES (?,?,?,?) RETURNING cod_veiculo';
+    $sql = 'INSERT INTO veiculo (preco, modelo, car_type) VALUES (?,?,?) RETURNING cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
 
-    $stmt->bindValue(1, $veiculo->getCodVeiculo());
-    $stmt->bindValue(2, $veiculo->getPreco());
-    $stmt->bindValue(3, $veiculo->getModelo());
-    $stmt->bindValue(4, $veiculo->getCarType());
+    $stmt->bindValue(1, $veiculo->getPreco());
+    $stmt->bindValue(2, $veiculo->getModelo());
+    $stmt->bindValue(3, $veiculo->getCarType());
     $stmt->execute();
 
     $response = $stmt->fetch();
@@ -81,7 +80,7 @@ class VeiculoRepository
   public function update(Veiculo $veiculo)
   {
 
-    $sql = 'UPDATE veiculo SET preco = ?, modelo = ? WHERE cod_veiculo = ?';
+    $sql = 'UPDATE veiculo SET preco = ?, modelo = ? WHERE cod_veiculo = ? RETURNING cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $veiculo->getPreco());
@@ -89,6 +88,9 @@ class VeiculoRepository
     $stmt->bindValue(3, $veiculo->getCodVeiculo());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($id)

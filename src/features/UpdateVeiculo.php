@@ -69,6 +69,8 @@ class UpdateVeiculo
       ));
     endif;
 
+    $type = array();
+
     if (!$veiculo->getPreco()) :
       $veiculo->setPreco($veiculoFinded['preco']);
     endif;
@@ -78,21 +80,19 @@ class UpdateVeiculo
     endif;
 
     if ($this->veiculo['tamanho_motor']) :
-      $carroRepository->update($this->getCarroInstance());
+      $type = $carroRepository->update($this->getCarroInstance());
     endif;
 
     if ($this->veiculo['capacidade_peso']) :
-      $caminhaoRepository->update($this->getCaminhaoInstance());
+      $type = $caminhaoRepository->update($this->getCaminhaoInstance());
     endif;
 
     if ($this->veiculo['nr_assentos']) :
-      $utilitarioRepository->update($this->getUtilitarioInstance());
+      $type = $utilitarioRepository->update($this->getUtilitarioInstance());
     endif;
 
-    $veiculoRepository->update($veiculo);
+    $veiculoUpdated = $veiculoRepository->update($veiculo);
 
-    return json_encode(array(
-      "message" => "veiculo updated"
-    ));
+    return json_encode(array_merge($veiculoUpdated, $type));
   }
 }

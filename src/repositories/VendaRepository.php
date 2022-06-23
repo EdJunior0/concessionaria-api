@@ -12,7 +12,7 @@ class VendaRepository
 
   public function create(Venda $venda)
   {
-    $sql = 'INSERT INTO venda (cod_veiculo, cod_vendedor, cpf_cliente, data_venda) VALUES (?,?,?,?)';
+    $sql = 'INSERT INTO venda (veiculo_fk_cod_veiculo, vendedor_fk_cod_vendedor, cliente_fk_cpf, data_venda) VALUES (?,?,?,?) RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
 
@@ -21,8 +21,10 @@ class VendaRepository
     $stmt->bindValue(3, $venda->getCpfCliente());
     $stmt->bindValue(4, $venda->getDataVenda());
 
-
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function find()
@@ -42,7 +44,7 @@ class VendaRepository
 
   public function findOne($cod_veiculo, $cod_vendedor, $cpf_cliente)
   {
-    $sql = 'SELECT * FROM venda WHERE cod_veiculo = ? OR cod_vendedor = ? OR cpf_cliente = ?';
+    $sql = 'SELECT * FROM venda WHERE veiculo_fk_cod_veiculo = ? OR vendedor_fk_cod_vendedor = ? OR cliente_fk_cpf = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
 
@@ -55,9 +57,9 @@ class VendaRepository
     $response = $stmt->fetch();
 
     return array(
-      "cod_veiculo" => $response['cod_veiculo'],
-      "cod_vendedor" => $response['cod_vendedor'],
-      "cpf_cliente" => $response['cpf_cliente'],
+      "cod_veiculo" => $response['veiculo_fk_cod_veiculo'],
+      "cod_vendedor" => $response['vendedor_fk_cod_vendedor'],
+      "cpf_cliente" => $response['cliente_fk_cpf'],
       "data_venda" => $response['data_venda']
     );
   }
@@ -73,9 +75,9 @@ class VendaRepository
     $response = $stmt->fetch();
 
     return array(
-      "cod_veiculo" => $response['cod_veiculo'],
-      "cod_vendedor" => $response['cod_vendedor'],
-      "cpf_cliente" => $response['cpf_cliente'],
+      "cod_veiculo" => $response['veiculo_fk_cod_veiculo'],
+      "cod_vendedor" => $response['vendedor_fk_cod_vendedor'],
+      "cpf_cliente" => $response['cliente_fk_cpf'],
       "data_venda" => $response['data_venda']
     );
   }
@@ -83,7 +85,7 @@ class VendaRepository
   public function update(Venda $venda)
   {
 
-    $sql = 'UPDATE venda SET cod_veiculo = ?, cod_vendedor = ?, cpf_cliente = ?, data_venda = ? WHERE cod_veiculo = ? OR cod_vendedor = ? OR cpf_cliente = ? OR data_venda = ?';
+    $sql = 'UPDATE venda SET veiculo_fk_cod_veiculo = ?, vendedor_fk_cod_vendedor = ?, cliente_fk_cpf = ?, data_venda = ? WHERE veiculo_fk_cod_veiculo = ? OR vendedor_fk_cod_vendedor = ? OR cliente_fk_cpf = ? OR data_venda = ? RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $venda->getCodVeiculo());
@@ -96,12 +98,15 @@ class VendaRepository
     $stmt->bindValue(8, $venda->getDataVenda());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($cod_veiculo, $cod_vendedor, $cpf_cliente)
   {
 
-    $sql = 'DELETE FROM venda WHERE cod_veiculo = ? OR cod_vendedor = ? OR cpf_cliente = ?';
+    $sql = 'DELETE FROM venda WHERE veiculo_fk_cod_veiculo = ? OR cod_vendedor = ? OR cpf_cliente = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $cod_veiculo);

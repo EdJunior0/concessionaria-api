@@ -42,10 +42,8 @@ class UpdateVendedor
       $vendedor->setNome($vendedorFinded['nome']);
     endif;
 
-    $vendedorRepository->update($vendedor);
+    $vendedorUpdated = $vendedorRepository->update($vendedor);
 
-    return json_encode(array(
-      "message" => "vendedor updated"
-    ));
+    return json_encode($vendedorUpdated);
   }
 }

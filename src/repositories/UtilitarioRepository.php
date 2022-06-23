@@ -12,13 +12,16 @@ class UtilitarioRepository
 
   public function create(Utilitario $utilitario)
   {
-    $sql = 'INSERT INTO utilitario (cod_veiculo, nr_assentos) VALUES (?,?)';
+    $sql = 'INSERT INTO utilitario (veiculo_fk_cod_veiculo, nr_assentos) VALUES (?,?) RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
 
     $stmt->bindValue(1, $utilitario->getCodVeiculo());
     $stmt->bindValue(2, $utilitario->getNrAssentos());
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function find()
@@ -38,7 +41,7 @@ class UtilitarioRepository
 
   public function findOne($id)
   {
-    $sql = 'SELECT * FROM utilitario WHERE cod_veiculo = ?';
+    $sql = 'SELECT * FROM utilitario WHERE veiculo_fk_cod_veiculo = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
 
@@ -48,7 +51,7 @@ class UtilitarioRepository
     $response = $stmt->fetch();
 
     return array(
-      "cod_veiculo" => $response['cod_veiculo'],
+      "cod_veiculo" => $response['veiculo_fk_cod_veiculo'],
       "nr_assentos" => $response['nr_assentos']
     );
   }
@@ -56,19 +59,22 @@ class UtilitarioRepository
   public function update(Utilitario $utilitario)
   {
 
-    $sql = 'UPDATE utilitario SET nr_assentos = ? WHERE cod_veiculo = ?';
+    $sql = 'UPDATE utilitario SET nr_assentos = ? WHERE veiculo_fk_cod_veiculo = ? RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $utilitario->getNrAssentos());
     $stmt->bindValue(2, $utilitario->getCodVeiculo());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($id)
   {
 
-    $sql = 'DELETE FROM utilitario WHERE cod_veiculo = ?';
+    $sql = 'DELETE FROM utilitario WHERE veiculo_fk_cod_veiculo = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $id);

@@ -12,13 +12,15 @@ class VendedorRepository
 
   public function create(Vendedor $vendedor)
   {
-    $sql = 'INSERT INTO vendedor (cod_vendedor, nome) VALUES (?,?)';
+    $sql = 'INSERT INTO vendedor (nome) VALUES (?) RETURNING cod_vendedor';
 
     $stmt = Connection::getConn()->prepare($sql);
 
-    $stmt->bindValue(1, $vendedor->getCodVendedor());
-    $stmt->bindValue(2, $vendedor->getNome());
+    $stmt->bindValue(1, $vendedor->getNome());
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function find()
@@ -72,13 +74,16 @@ class VendedorRepository
   public function update(Vendedor $vendedor)
   {
 
-    $sql = 'UPDATE vendedor SET nome = ? WHERE cod_vendedor = ?';
+    $sql = 'UPDATE vendedor SET nome = ? WHERE cod_vendedor = ? RETURNING cod_vendedor';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $vendedor->getNome());
     $stmt->bindValue(2, $vendedor->getCodVendedor());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($id)

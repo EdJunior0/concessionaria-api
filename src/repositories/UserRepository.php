@@ -12,7 +12,7 @@ class UserRepository
 
   public function create(User $user)
   {
-    $sql = 'INSERT INTO my_user (email, senha, nome) VALUES (?,?,?)';
+    $sql = 'INSERT INTO my_user (email, senha, nome) VALUES (?,?,?) RETURNING email';
 
     $stmt = Connection::getConn()->prepare($sql);
 
@@ -20,6 +20,9 @@ class UserRepository
     $stmt->bindValue(2, $user->getSenha());
     $stmt->bindValue(3, $user->getNome());
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function find()
@@ -75,13 +78,16 @@ class UserRepository
   public function update(User $user)
   {
 
-    $sql = 'UPDATE my_user SET nome = ? WHERE email = ?';
+    $sql = 'UPDATE my_user SET nome = ? WHERE email = ? RETURNING email';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $user->getNome());
     $stmt->bindValue(2, $user->getEmail());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($email)

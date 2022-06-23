@@ -12,13 +12,15 @@ class CaminhaoRepository
 
   public function create(Caminhao $caminhao)
   {
-    $sql = 'INSERT INTO caminhao (cod_veiculo, capacidade_peso) VALUES (?,?)';
+    $sql = 'INSERT INTO caminhao (capacidade_peso) VALUES (?) RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
 
-    $stmt->bindValue(1, $caminhao->getCodVeiculo());
-    $stmt->bindValue(2, $caminhao->getCapacidadePeso());
+    $stmt->bindValue(1, $caminhao->getCapacidadePeso());
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function find()
@@ -38,7 +40,7 @@ class CaminhaoRepository
 
   public function findOne($id)
   {
-    $sql = 'SELECT * FROM caminhao WHERE cod_veiculo = ?';
+    $sql = 'SELECT * FROM caminhao WHERE veiculo_fk_cod_veiculo = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
 
@@ -48,7 +50,7 @@ class CaminhaoRepository
     $response = $stmt->fetch();
 
     return array(
-      "cod_veiculo" => $response['cod_veiculo'],
+      "cod_veiculo" => $response['veiculo_fk_cod_veiculo'],
       "capacidade_peso" => $response['capacidade_peso']
     );
   }
@@ -56,19 +58,22 @@ class CaminhaoRepository
   public function update(Caminhao $caminhao)
   {
 
-    $sql = 'UPDATE caminhao SET capacidade_peso = ? WHERE cod_veiculo = ?';
+    $sql = 'UPDATE caminhao SET capacidade_peso = ? WHERE veiculo_fk_cod_veiculo = ? RETURNING veiculo_fk_cod_veiculo';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $caminhao->getCapacidadePeso());
     $stmt->bindValue(2, $caminhao->getCodVeiculo());
 
     $stmt->execute();
+
+    $response = $stmt->fetch();
+    return $response;
   }
 
   public function delete($id)
   {
 
-    $sql = 'DELETE FROM caminhao WHERE cod_veiculo = ?';
+    $sql = 'DELETE FROM caminhao WHERE veiculo_fk_cod_veiculo = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
     $stmt->bindValue(1, $id);
