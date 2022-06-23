@@ -57,10 +57,8 @@ class UpdateVenda
       $venda->setDataVenda($vendaFinded['data_venda']);
     endif;
 
-    $vendaRepository->update($venda);
+    $vendaUpdated = $vendaRepository->update($venda);
 
-    return json_encode(array(
-      "message" => "venda updated"
-    ));
+    return json_encode($vendaUpdated);
   }
 }

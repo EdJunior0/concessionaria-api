@@ -48,10 +48,8 @@ class UpdateCliente
       $cliente->setEndereco($clienteFinded['endereco']);
     endif;
 
-    $clienteRepository->update($cliente);
+    $clienteUpdated = $clienteRepository->update($cliente);
 
-    return json_encode(array(
-      "message" => "cliente updated"
-    ));
+    return json_encode($clienteUpdated);
   }
 }
