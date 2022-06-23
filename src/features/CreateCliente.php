@@ -30,10 +30,8 @@ class CreateCliente
   {
     $clienteRepository = new ClienteRepository();
 
-    $clienteRepository->create($this->getClienteInstance());
+    $cliente = $clienteRepository->create($this->getClienteInstance());
 
-    return json_encode(array(
-      "message" => "cliente cadastrado com sucesso!"
-    ));
+    return json_encode($cliente);
   }
 }

@@ -25,30 +25,30 @@ class CreateVeiculo
 
   private function getVeiculoInstance()
   {
-    $veiculo = new Veiculo($this->veiculo['cod_veiculo']);
+    $veiculo = new Veiculo(null);
     $veiculo->setPreco($this->veiculo['preco']);
     $veiculo->setModelo($this->veiculo['modelo']);
     $veiculo->setCarType($this->veiculo['car_type']);
     return $veiculo;
   }
 
-  private function getCarroInstance()
+  private function getCarroInstance($id)
   {
-    $carro = new Carro($this->veiculo['cod_veiculo']);
+    $carro = new Carro($id);
     $carro->setTamanhoMotor($this->veiculo['tamanho_motor']);
     return $carro;
   }
 
-  private function getCaminhaoInstance()
+  private function getCaminhaoInstance($id)
   {
-    $caminhao = new Caminhao($this->veiculo['cod_veiculo']);
+    $caminhao = new Caminhao($id);
     $caminhao->setCapacidadePeso($this->veiculo['capacidade_peso']);
     return $caminhao;
   }
 
-  private function getUtilitarioInstance()
+  private function getUtilitarioInstance($id)
   {
-    $utilitario = new Utilitario($this->veiculo['cod_veiculo']);
+    $utilitario = new Utilitario($id);
     $utilitario->setNrAssentos($this->veiculo['nr_assentos']);
     return $utilitario;
   }
@@ -61,21 +61,20 @@ class CreateVeiculo
     $utilitarioRepository = new UtilitarioRepository();
 
     $veiculo = $veiculoRepository->create($this->getVeiculoInstance());
+    $type = array();
 
     if ($this->veiculo['car_type'] == "carro") :
-      $carroRepository->create($this->getCarroInstance());
+      $type = $carroRepository->create($this->getCarroInstance($veiculo['cod_veiculo']));
     endif;
 
     if ($this->veiculo['car_type'] == "caminhao") :
-      $caminhaoRepository->create($this->getCaminhaoInstance());
+      $type = $caminhaoRepository->create($this->getCaminhaoInstance($veiculo['cod_veiculo']));
     endif;
 
     if ($this->veiculo['car_type'] == "utilitario") :
-      $utilitarioRepository->create($this->getUtilitarioInstance());
+      $type = $utilitarioRepository->create($this->getUtilitarioInstance($veiculo['cod_veiculo']));
     endif;
 
-    return json_encode(array(
-      "message" => "Veículo cadastrado com sucesso!"
-    ));
+    return json_encode(array_merge($veiculo, $type));
   }
 }

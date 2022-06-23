@@ -38,10 +38,8 @@ class CreateUser
       ));
     }
 
-    $userRepository->create($this->getuserInstance());
+    $user = $userRepository->create($this->getuserInstance());
 
-    return json_encode(array(
-      "message" => "user cadastrado com sucesso!"
-    ));
+    return json_encode($user);
   }
 }

@@ -20,7 +20,7 @@ class CreateVendedor
   private function getVendedorInstance()
   {
     $vendedor = new Vendedor();
-    $vendedor->setCodVendedor($this->vendedor['cod_vendedor']);
+    $vendedor->setCodVendedor(null);
     $vendedor->setNome($this->vendedor['nome']);
     return $vendedor;
   }
@@ -29,10 +29,8 @@ class CreateVendedor
   {
     $vendedorRepository = new VendedorRepository();
 
-    $vendedorRepository->create($this->getVendedorInstance());
+    $vendedor = $vendedorRepository->create($this->getVendedorInstance());
 
-    return json_encode(array(
-      "message" => "Vendedor cadastrado com sucesso!"
-    ));
+    return json_encode($vendedor);
   }
 }

@@ -32,10 +32,8 @@ class CreateVenda
   {
     $vendaRepository = new VendaRepository();
 
-    $vendaRepository->create($this->getVendaInstance());
+    $venda = $vendaRepository->create($this->getVendaInstance());
 
-    return json_encode(array(
-      "message" => "venda cadastrado com sucesso!"
-    ));
+    return json_encode($venda);
   }
 }
