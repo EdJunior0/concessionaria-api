@@ -10,17 +10,19 @@ class GetUser
 {
 
   private $email;
+  private $senha;
 
-  public function __construct($email)
+  public function __construct($email, $senha)
   {
     $this->email = $email;
+    $this->senha = $senha;
   }
 
   public function getUser()
   {
     $userRepository = new UserRepository();
 
-    $user = $userRepository->findOne($this->email);
+    $user = $userRepository->findOne($this->email, $this->senha);
 
     if ($user['email']) :
       return json_encode($user);

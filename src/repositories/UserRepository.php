@@ -22,7 +22,9 @@ class UserRepository
     $stmt->execute();
 
     $response = $stmt->fetch();
-    return $response;
+    return array(
+      "email" => $response['email']
+    );
   }
 
   public function find()
@@ -40,13 +42,14 @@ class UserRepository
     endif;
   }
 
-  public function findOne($email)
+  public function findOne($email, $senha)
   {
-    $sql = 'SELECT * FROM my_user WHERE email = ?';
+    $sql = 'SELECT * FROM my_user WHERE email = ? AND senha = ?';
 
     $stmt = Connection::getConn()->prepare($sql);
 
     $stmt->bindValue(1, $email);
+    $stmt->bindValue(2, $senha);
     $stmt->execute();
 
     $response = $stmt->fetch();

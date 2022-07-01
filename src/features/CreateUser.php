@@ -30,7 +30,7 @@ class CreateUser
   {
     $userRepository = new UserRepository();
 
-    $userFinded = $userRepository->findOne($this->getUserInstance()->getEmail());
+    $userFinded = $userRepository->findOne($this->getUserInstance()->getEmail(), $this->getUserInstance()->getSenha());
 
     if ($userFinded['email']) {
       return json_encode(array(

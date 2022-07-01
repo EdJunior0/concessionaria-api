@@ -29,7 +29,7 @@ class UserController
       case self::GET:
 
         if ($this->payload['email']) {
-          $user = new GetUser($this->payload['email']);
+          $user = new GetUser($this->payload['email'], $this->payload['senha']);
           echo $user->getuser();
         } elseif ($this->payload['nome']) {
 
