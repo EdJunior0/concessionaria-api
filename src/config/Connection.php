@@ -13,7 +13,6 @@ class Connection
   public static function getConn()
   {
     $HOST = getenv("HOST");
-    echo $HOST;
     $DB_NAME = getenv("DB_NAME");
     $BD_USER = getenv("DB_USER");
     $DB_PASSWORD = getenv("DB_PASSWORD");
