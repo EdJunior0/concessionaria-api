@@ -16,15 +16,17 @@ class ClienteController
 
   private $method;
   private $payload;
+  private $params;
   const GET = 'get';
   const POST = 'post';
   const PATCH = 'patch';
   const DELETE = 'delete';
 
-  public function __construct($method, $payload)
+  public function __construct($method, $payload, $params)
   {
     $this->method = $method;
     $this->payload = $payload;
+    $this->params = $params;
   }
 
   public function clienteController()
@@ -32,15 +34,13 @@ class ClienteController
     switch ($this->method) {
       case self::GET:
 
-        if ($this->payload['cpf']) {
-          $liente = new GetCliente($this->payload['cpf']);
+        if ($this->params['cpf']) {
+          $liente = new GetCliente($this->params['cpf']);
           echo $liente->getCliente();
-        } elseif ($this->payload['nome']) {
-
-          $liente = new GetClienteByNome($this->payload['nome']);
+        } elseif ($this->params['nome']) {
+          $liente = new GetClienteByNome($this->params['nome']);
           echo $liente->getClienteByNome();
         } else {
-
           $liente = new GetClientes();
           echo $liente->getClientes();
         }
@@ -57,7 +57,7 @@ class ClienteController
         break;
 
       case self::DELETE:
-        $liente = new DeleteCliente($this->payload['cpf']);
+        $liente = new DeleteCliente($this->params['cpf']);
         echo $liente->deleteCliente();
         break;
 

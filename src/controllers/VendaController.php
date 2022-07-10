@@ -16,15 +16,17 @@ class VendaController
 
   private $method;
   private $payload;
+  private $params;
   const GET = 'get';
   const POST = 'post';
   const PATCH = 'patch';
   const DELETE = 'delete';
 
-  public function __construct($method, $payload)
+  public function __construct($method, $payload, $params)
   {
     $this->method = $method;
     $this->payload = $payload;
+    $this->params = $params;
   }
 
   public function vendaController()
@@ -32,15 +34,13 @@ class VendaController
     switch ($this->method) {
       case self::GET:
 
-        if ($this->payload['cod_veiculo'] || $this->payload['cod_vendedor'] || $this->payload['cpf_cliente']) {
-          $venda = new GetVenda($this->payload);
+        if ($this->params['cod_veiculo'] || $this->params['cod_vendedor'] || $this->params['cpf_cliente']) {
+          $venda = new GetVenda($this->params);
           echo $venda->getvenda();
-        } elseif ($this->payload['data_venda']) {
-
-          $venda = new GetVendaByData($this->payload['data_venda']);
+        } elseif ($this->params['data_venda']) {
+          $venda = new GetVendaByData($this->params['data_venda']);
           echo $venda->getVendaByData();
         } else {
-
           $venda = new GetVendas();
           echo $venda->getVendas();
         }
@@ -57,7 +57,7 @@ class VendaController
         break;
 
       case self::DELETE:
-        $venda = new DeleteVenda($this->payload);
+        $venda = new DeleteVenda($this->params);
         echo $venda->deleteVenda();
         break;
 

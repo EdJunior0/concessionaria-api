@@ -16,11 +16,11 @@ class Router
   private $url;
   private $payload;
   private $method;
-  const VEICULO = 'veiculo';
-  const CLIENTE = 'cliente';
-  const VENDEDOR = 'vendedor';
-  const VENDA = 'venda';
-  const USER = 'user';
+  const VEICULO = '/veiculo';
+  const CLIENTE = '/cliente';
+  const VENDEDOR = '/vendedor';
+  const VENDA = '/venda';
+  const USER = '/user';
 
   public function __construct($url, $payload, $method)
   {
@@ -32,14 +32,15 @@ class Router
   private function routes()
   {
 
-    $veiculoController = new VeiculoController($this->method, $this->payload);
-    $vendedorController = new VendedorController($this->method, $this->payload);
-    $clienteController = new ClienteController($this->method, $this->payload);
-    $vendaController = new VendaController($this->method, $this->payload);
-    $userController = new UserController($this->method, $this->payload);
+    parse_str($this->url['query'], $params);
+    $veiculoController = new VeiculoController($this->method, $this->payload, $params);
+    $vendedorController = new VendedorController($this->method, $this->payload, $params);
+    $clienteController = new ClienteController($this->method, $this->payload, $params);
+    $vendaController = new VendaController($this->method, $this->payload, $params);
+    $userController = new UserController($this->method, $this->payload, $params);
 
 
-    switch ($this->url) {
+    switch ($this->url['path']) {
       case self::VEICULO:
         $veiculoController->veiculoController();
         break;
