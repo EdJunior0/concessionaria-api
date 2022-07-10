@@ -16,15 +16,17 @@ class VendedorController
 
   private $method;
   private $payload;
+  private $params;
   const GET = 'get';
   const POST = 'post';
   const PATCH = 'patch';
   const DELETE = 'delete';
 
-  public function __construct($method, $payload)
+  public function __construct($method, $payload, $params)
   {
     $this->method = $method;
     $this->payload = $payload;
+    $this->params = $params;
   }
 
   public function vendedorController()
@@ -32,15 +34,13 @@ class VendedorController
     switch ($this->method) {
       case self::GET:
 
-        if ($this->payload['cod_vendedor']) {
-          $vendedor = new GetVendedor($this->payload['cod_vendedor']);
+        if ($this->params['cod_vendedor']) {
+          $vendedor = new GetVendedor($this->params['cod_vendedor']);
           echo $vendedor->getVendedor();
-        } elseif ($this->payload['nome']) {
-
-          $vendedor = new GetVendedorByNome($this->payload['nome']);
+        } elseif ($this->params['nome']) {
+          $vendedor = new GetVendedorByNome($this->params['nome']);
           echo $vendedor->getVendedorByNome();
         } else {
-
           $vendedor = new GetVendedores();
           echo $vendedor->getVendedores();
         }
@@ -57,7 +57,7 @@ class VendedorController
         break;
 
       case self::DELETE:
-        $vendedor = new DeleteVendedor($this->payload['cod_vendedor']);
+        $vendedor = new DeleteVendedor($this->params['cod_vendedor']);
         echo $vendedor->deleteVendedor();
         break;
 

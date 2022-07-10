@@ -12,15 +12,17 @@ class UserController
 
   private $method;
   private $payload;
+  private $params;
   const GET = 'get';
   const POST = 'post';
   const PATCH = 'patch';
   const DELETE = 'delete';
 
-  public function __construct($method, $payload)
+  public function __construct($method, $payload, $params)
   {
     $this->method = $method;
     $this->payload = $payload;
+    $this->params = $params;
   }
 
   public function userController()
@@ -28,9 +30,9 @@ class UserController
     switch ($this->method) {
       case self::GET:
 
-        if ($this->payload['email']) {
-          $user = new GetUser($this->payload['email'], $this->payload['senha']);
-          echo $user->getuser();
+        if ($this->params['email']) {
+          $user = new GetUser($this->params['email'], $this->params['senha']);
+          echo $user->getUser();
         } elseif ($this->payload['nome']) {
 
           // $user = new GetuserByNome($this->payload['nome']);

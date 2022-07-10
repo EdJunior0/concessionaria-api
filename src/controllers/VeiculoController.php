@@ -16,15 +16,17 @@ class VeiculoController
 
   private $method;
   private $payload;
+  private $params;
   const GET = 'get';
   const POST = 'post';
   const PATCH = 'patch';
   const DELETE = 'delete';
 
-  public function __construct($method, $payload)
+  public function __construct($method, $payload, $params)
   {
     $this->method = $method;
     $this->payload = $payload;
+    $this->params = $params;
   }
 
   public function veiculoController()
@@ -32,12 +34,12 @@ class VeiculoController
     switch ($this->method) {
       case self::GET:
 
-        if ($this->payload['cod_veiculo']) {
-          $veiculo = new GetVeiculo($this->payload['cod_veiculo']);
+        if ($this->params['cod_veiculo']) {
+          $veiculo = new GetVeiculo($this->params['cod_veiculo']);
           echo $veiculo->getVeiculo();
-        } elseif ($this->payload['modelo']) {
+        } elseif ($this->params['modelo']) {
 
-          $veiculo = new GetVeiculoByModel($this->payload['modelo']);
+          $veiculo = new GetVeiculoByModel($this->params['modelo']);
           echo $veiculo->getVeiculoByModel();
         } else {
 
@@ -57,7 +59,7 @@ class VeiculoController
         break;
 
       case self::DELETE:
-        $veiculo = new DeleteVeiculo($this->payload['cod_veiculo']);
+        $veiculo = new DeleteVeiculo($this->params['cod_veiculo']);
         echo $veiculo->deleteVeiculo();
         break;
 
